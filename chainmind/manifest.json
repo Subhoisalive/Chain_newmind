@@ -1,0 +1,83 @@
+{
+  "manifest_version": 3,
+  "name": "Chain Mind",
+  "version": "0.4.0",
+  "description": "Carry a conversation from one AI assistant to another, see how much context you have left, and find out where to go next. Made by Suvhankar Dutta.",
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "clipboardWrite",
+    "downloads",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://grok.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/ui/popup.html",
+    "default_title": "Chain Mind",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://grok.com/*"
+      ],
+      "js": [
+        "src/content/hook.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://grok.com/*"
+      ],
+      "js": [
+        "src/content/content.bundle.js"
+      ],
+      "css": [
+        "src/ui/hud.css"
+      ],
+      "world": "ISOLATED",
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/ui/hud.css",
+        "assets/hud-art.jpg"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <title>Chain Mind — Security</title>
+  </head>
+  <body>
+    <header class="db-header">
+      <div class="db-title">
+        <p class="eyebrow">System diagnostic:</p>
+        <h1>Chain Mind Security</h1>
+        <p>AI firewall, agent monitor, and research console — everything here reads what happened in your own browser. Nothing is sent anywhere.</p>
+      </div>
+      <nav class="db-tabs" data-tabs>
+        <button type="button" data-tab="overview" class="is-active">Overview</button>
+        <button type="button" data-tab="events">Events</button>
+        <button type="button" data-tab="policy">Policy</button>
+        <button type="button" data-tab="analytics">Analytics</button>
+        <button type="button" data-tab="tools">Tools</button>
+        <button type="button" data-tab="search">Search</button>
+        <button type="button" data-tab="handoff">Handoff</button>
+        <button type="button" data-tab="settings">Settings</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Overview: SOC-style summary -->
+      <section data-panel="overview">
+        <div class="cards" data-summary-cards>
+          <div class="card"><span class="card-num" data-c-scanned>0</span><span class="card-label">messages scanned</span></div>
+          <div class="card is-flag"><span class="card-num" data-c-flagged>0</span><span class="card-label">flagged</span></div>
+          <div class="card is-warn"><span class="card-num" data-c-approval>0</span><span class="card-label">need approval</span></div>
+          <div class="card is-block"><span class="card-num" data-c-blocked>0</span><span class="card-label">blocked</span></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <h2>Risk levels</h2>
+            <div class="bars" data-severity-bars></div>
+          </div>
+          <div class="panel">
+            <h2>By detector</h2>
+            <div class="bars" data-type-bars></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Attack chain — most recent conversation with findings</h2>
+          <p class="fine">Events from one conversation, in the order they were seen, so a sequence of small findings reads as the chain it might be.</p>
+          <div class="chain" data-chain>
+            <p class="empty">Nothing flagged yet. This fills in as the firewall sees something across a supported chat tab.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Events: full log -->
+      <section data-panel="events" hidden>
+        <div class="toolbar">
+          <h2>Security events</h2>
+          <div>
+            <select data-filter-type>
+              <option value="">All types</option>
+              <option value="injection">Prompt injection</option>
+              <option value="dlp">DLP</option>
+              <option value="code">Code scan</option>
+              <option value="agent">Agent action</option>
+              <option value="hidden">Hidden text</option>
+              <option value="link">Links</option>
+              <option value="dependency">Dependencies</option>
+            </select>
+            <button type="button" data-clear-events>Clear log</button>
+          </div>
+        </div>
+        <table class="events-table">
+          <thead>
+            <tr><th>When</th><th>Type</th><th>Severity</th><th>Verdict</th><th>Title</th><th>Detail</th><th>Provider</th></tr>
+          </thead>
+          <tbody data-events-body>
+            <tr><td colspan="7" class="empty">No events yet.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Policy: least-privilege rule editor -->
+      <section data-panel="policy" hidden>
+        <div class="toolbar">
+          <h2>Least-privilege policy</h2>
+          <div>
+            <button type="button" data-add-rule>Add rule</button>
+            <button type="button" data-reset-policy>Reset to defaults</button>
+          </div>
+        </div>
+        <p class="fine">Evaluated top to bottom — first matching rule wins. Applies to actions the firewall finds written into an assistant's reply (shell commands, file writes, network calls, database statements), not to the chat itself.</p>
+        <table class="policy-table">
+          <thead>
+            <tr><th>Action</th><th>Pattern (regex)</th><th>Effect</th><th>Reason</th><th></th></tr>
+          </thead>
+          <tbody data-policy-body></tbody>
+        </table>
+        <p class="status" data-policy-status></p>
+      </section>
+
+      <!-- Analytics: precision/recall/F1 + live stats -->
+      <section data-panel="analytics" hidden>
+        <div class="panel">
+          <h2>Detector test suite</h2>
+          <p class="fine">A small hand-labeled set of cases scored against the live detectors — a sanity check on the pattern rules, not a benchmark claim. Open <code>src/lib/security/analytics.js</code> to see every case.</p>
+          <button type="button" data-run-suite>Run test suite</button>
+          <div class="grid-2" data-suite-results hidden></div>
+        </div>
+        <div class="panel">
+          <h2>Live detection rate</h2>
+          <dl class="metrics" data-live-metrics></dl>
+        </div>
+      </section>
+
+      <!-- Tools: originality, cleaner, DLP redaction as standalone utilities -->
+      <section data-panel="tools" hidden>
+        <div class="panel">
+          <h2>DLP redactor</h2>
+          <p class="fine">Paste text to see what would be flagged and get a redacted copy back. Nothing leaves this page.</p>
+          <textarea data-dlp-input rows="4" placeholder="Paste text to scan for secrets and PII…"></textarea>
+          <button type="button" data-dlp-scan>Scan</button>
+          <div class="results" data-dlp-results></div>
+        </div>
+
+        <div class="panel">
+          <h2>Originality &amp; integrity analyzer</h2>
+          <p class="fine">Compares your text against one or more sources you paste in, and flags claims that read as authoritative with no citation nearby. Local only — not a web-wide plagiarism check.</p>
+          <textarea data-orig-text rows="4" placeholder="Your text…"></textarea>
+          <textarea data-orig-source rows="4" placeholder="Text to compare against (a draft, a source)…"></textarea>
+          <button type="button" data-orig-scan>Analyze</button>
+          <div class="results" data-orig-results></div>
+        </div>
+
+        <div class="panel">
+          <h2>Copy cleaner</h2>
+          <p class="fine">What the copy sanitizer does to text you copy from a chat: strips invisible characters, odd spaces, citation markers and stray markdown symbols. It cannot remove statistical watermarks in word choice.</p>
+          <textarea data-copyclean-input rows="4" placeholder="Paste text copied from a chat…"></textarea>
+          <button type="button" data-copyclean-run>Clean</button>
+          <div class="results" data-copyclean-results></div>
+        </div>
+
+        <div class="panel">
+          <h2>Output cleaner</h2>
+          <p class="fine">Strips filler openers, stock AI phrasing, and repeated sentences. Leaves code blocks untouched.</p>
+          <textarea data-clean-input rows="5" placeholder="Paste AI output to clean up…"></textarea>
+          <button type="button" data-clean-run>Clean</button>
+          <div class="results" data-clean-results></div>
+        </div>
+      </section>
+
+      <section data-panel="search" hidden>
+        <div class="panel">
+          <h2>Search across ChatGPT, Claude, Gemini and Grok</h2>
+          <p class="fine">Searches conversations Chain Mind has read in this browser. Off by default — turn on “Save conversations for search” in Settings. Secrets are redacted before anything is saved, and nothing leaves this device.</p>
+          <input type="text" data-search-input placeholder="Search your conversations…" class="wide" />
+          <button type="button" data-search-run>Search</button>
+          <button type="button" data-search-clear>Delete saved conversations</button>
+          <p class="status" data-search-status></p>
+          <div class="results" data-search-results></div>
+        </div>
+      </section>
+
+      <section data-panel="handoff" hidden>
+        <div class="panel">
+          <h2>Last handoff</h2>
+          <p class="fine">What was carried to another assistant, what was cleaned on the way, and what did not make the trip. Heuristic comparison: a sentence counts as kept when most of its key words appear in the handoff.</p>
+          <div class="results" data-handoff-report><p class="empty">No handoff yet. Use “Carry on somewhere else” from a chat.</p></div>
+        </div>
+      </section>
+
+      <section data-panel="settings" hidden>
+        <div class="panel">
+          <h2>Protections</h2>
+          <label class="opt"><span>Hold risky drafts before sending</span>
+            <select data-set="preSend"><option value="warn">On — ask me first</option><option value="off">Off</option></select></label>
+          <label class="opt"><span>Clean text when I copy from a chat</span><input type="checkbox" data-set="copySanitize" /></label>
+          <label class="opt"><span>Redact and clean handoffs</span><input type="checkbox" data-set="sanitizeHandoff" /></label>
+          <label class="opt"><span>Save conversations for search</span><input type="checkbox" data-set="archive" /></label>
+          <p class="fine">Copy cleaning removes invisible characters and stray markdown symbols from text you select and copy. It does not remove statistical watermarks in word choice, and it does not alter the site’s own “Copy” buttons.</p>
+          <p class="status" data-settings-status></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="db-footer">Chain Mind · Made by Suvhankar Dutta</footer>
+    <script type="module" src="dashboard.js"></script>
+  </body>
+</html>

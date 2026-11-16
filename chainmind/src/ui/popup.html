@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Chain Mind</title>
+  </head>
+  <body>
+    <div class="frame">
+      <header class="hero">
+        <div class="hero-text">
+          <p class="eyebrow">System diagnostic:</p>
+          <h1>Chain Mind</h1>
+          <span class="pill" data-sub>Open a chat on ChatGPT, Claude, Gemini, or Grok.</span>
+          <p class="chat-title" data-title>No conversation yet</p>
+        </div>
+      </header>
+
+      <section class="panel meter" data-meter hidden>
+        <p class="kicker">Neural link stability</p>
+        <div class="meter-figure"><span data-remaining>—</span><small>tokens left</small></div>
+        <div class="meter-bar"><span data-fill></span></div>
+        <dl>
+          <div><dt>Link used</dt><dd data-used>—</dd></div>
+          <div><dt>Msg count</dt><dd data-messages>—</dd></div>
+          <div><dt>Data upload</dt><dd data-media>—</dd></div>
+        </dl>
+      </section>
+
+      <section class="panel group">
+        <h2>Take it with you
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l4 4v14H5z M8 3v6h8V3 M8 21v-7h8v7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </h2>
+        <p class="kicker">Data export protocols</p>
+        <button class="metal" data-export-json>Chain Mind file</button>
+        <button class="metal" data-export-md>Markdown (.md)</button>
+        <button class="metal" data-handoff>Handoff brief</button>
+      </section>
+
+      <section class="panel danger" data-security-group data-level="idle">
+        <h2>Firewall
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z M12 10v5 M12 17.5v.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        </h2>
+        <p class="kicker" data-security-summary>Standing by · open a chat to start scanning</p>
+        <button class="metal alert" data-open-dashboard><i class="led"></i>Open security dashboard</button>
+      </section>
+
+      <section class="panel group">
+        <h2>Protections</h2>
+        <p class="kicker">Active shields</p>
+        <label class="toggle"><span>Hold risky drafts before sending</span><input type="checkbox" data-set="preSend" /></label>
+        <label class="toggle"><span>Clean text when I copy from a chat</span><input type="checkbox" data-set="copySanitize" /></label>
+        <label class="toggle"><span>Redact &amp; clean handoffs</span><input type="checkbox" data-set="sanitizeHandoff" /></label>
+        <label class="toggle"><span>Save chats locally for search</span><input type="checkbox" data-set="archive" /></label>
+        <div class="row">
+          <button class="metal small" data-open-tab="search">Search chats</button>
+          <button class="metal small" data-open-tab="handoff">Handoff report</button>
+        </div>
+        <div class="row">
+          <button class="metal small" data-open-tab="tools">Text tools</button>
+          <button class="metal small" data-open-tab="analytics">Analytics</button>
+        </div>
+      </section>
+
+      <section class="panel group" data-hops-group hidden>
+        <h2>Where to go next</h2>
+        <ul class="hops" data-hops></ul>
+      </section>
+
+      <section class="panel group locator">
+        <h2>Find a tool for a job <span class="tag">Tool protocol locator</span></h2>
+        <textarea
+          data-advisor-input
+          rows="2"
+          placeholder="Describe task… &quot;e.g., isolate background off 40 product files&quot;"
+        ></textarea>
+        <button class="metal" data-advise>Suggest tools</button>
+        <ul class="picks" data-picks></ul>
+        <button class="metal" data-advise-chat hidden>Ask this chat instead</button>
+      </section>
+
+      <section class="panel group">
+        <h2>Bring one in</h2>
+        <input type="file" id="file" accept=".json,.md" hidden />
+        <button class="metal" data-pick>Choose a Chain Mind file</button>
+        <label class="choice">
+          <input type="radio" name="mode" value="brief" checked />
+          Fit to this window, as structured memory
+        </label>
+        <label class="choice">
+          <input type="radio" name="mode" value="full" />
+          Paste the whole transcript
+        </label>
+        <button class="metal" data-insert disabled>Put it in the message box</button>
+      </section>
+
+      <p class="status" data-status></p>
+      <footer class="sig">Chain Mind &middot; Made by Suvhankar Dutta</footer>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
